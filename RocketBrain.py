@@ -144,11 +144,13 @@ print "y rotation: " , get_y_rotation(accel_xout_scaled, accel_yout_scaled, acce
 
 
     
-    now = datetime.datetime.now()
-    timestamp = now.strftime("%Y/%m/%d %H:%M")
-    #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
-    outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
-    f.write(outstring)
+now = datetime.datetime.now()
+timestamp = now.strftime("%Y/%m/%d %H:%M")
+#Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
+outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
+f.write(outstring)
+    
+radio.write(outstring)
     
     
     
@@ -156,10 +158,7 @@ print "y rotation: " , get_y_rotation(accel_xout_scaled, accel_yout_scaled, acce
     
     
     
-    
-    
-    
-    f.close()
+f.close()
 
   
 
