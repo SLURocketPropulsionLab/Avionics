@@ -31,6 +31,15 @@ altimeter = serial.Serial(
                bytesize=serial.EIGHTBITS,
                timeout=1
            )
+radio = serial.Serial(
+              
+               port='/dev/ttyAMA0',
+               baudrate = 9600,
+               parity=serial.PARITY_NONE,
+               stopbits=serial.STOPBITS_ONE,
+               bytesize=serial.EIGHTBITS,
+               timeout=1
+           )
 
 
 #seting the global variable
@@ -86,7 +95,7 @@ bus.write_byte_data(address, power_mgmt_1, 0)
 
 
 
-
+while True:
 
 #################################Altitude ##################################################
  CurrentAltitude=altimeter.readline()
@@ -152,8 +161,10 @@ f.write(outstring)
     
 radio.write(outstring)
     
-    
-    
+ sleep(1/30)   
+ except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+    print "\nKilling Thread..."
+    print "Done.\nExiting."   
     
     
     
