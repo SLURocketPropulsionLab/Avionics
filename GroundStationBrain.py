@@ -17,7 +17,7 @@ import datetime
 f=open('DataInLog.txt','a')
 
 
-while True:
+
 
 radio = serial.Serial(
               
@@ -29,8 +29,9 @@ radio = serial.Serial(
                timeout=1
            )
            counter=0
-          
-      
+
+while True:      
+
 datain=radio.readline()
 
 now = datetime.datetime.now()
@@ -48,7 +49,7 @@ except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     
     
     
-    f.close()
+f.close()
 
   
 
