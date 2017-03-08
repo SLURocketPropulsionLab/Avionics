@@ -37,7 +37,7 @@ datain=radio.readline()
 now = datetime.datetime.now()
 timestamp = now.strftime("%Y/%m/%d %H:%M")
 #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
-outstring = str(timestamp)+","+str(datain)+","\n"
+outstring = str(timestamp)+","+str(datain)+"\n"
 f.write(outstring)
     
     
