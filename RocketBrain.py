@@ -5,9 +5,7 @@ import math
 import os
 from gps import *
 from time import *
-import time
 import threading
-import time
 import serial
 import smbus
 import time
@@ -29,7 +27,7 @@ altimeter = serial.Serial(
                parity=serial.PARITY_NONE,
                stopbits=serial.STOPBITS_ONE,
                bytesize=serial.EIGHTBITS,
-               timeout=1
+               timeout=1/20
            )
 radio = serial.Serial(
               
@@ -38,7 +36,7 @@ radio = serial.Serial(
                parity=serial.PARITY_NONE,
                stopbits=serial.STOPBITS_ONE,
                bytesize=serial.EIGHTBITS,
-               timeout=1
+               timeout=1/20
            )
 
 
@@ -92,13 +90,32 @@ bus.write_byte_data(address, power_mgmt_1, 0)
 
 
 
+##############################################################################################
+#Initilize Variables
+##############################################################################################
+Alt_proj=0
+Alt_current=0
+V_current=0
+g=32.2 #ft/s^2
+Drag= enter drag here
+Roh = enter density array here
+Area=enter area here
+Mass = enter mass here
+Second_Alt = 0
+altcount=0
 
 
-
+##############################################################################################
+#Main Loop
+##############################################################################################
 while True:
 
 #################################Altitude ##################################################
- CurrentAltitude=altimeter.readline()
+
+starttime = time.time()
+Alt_current=altimeter.readline()
+
+
 ##################################GPS ######################################################
 
       #print 'latitude    ' , gpsd.fix.latitude
@@ -151,7 +168,27 @@ print "x rotation: " , get_x_rotation(accel_xout_scaled, accel_yout_scaled, acce
 print "y rotation: " , get_y_rotation(accel_xout_scaled, accel_yout_scaled, accel_zout_scaled)
 ###############################################################################################
 
+sleep(1/30)  
 
+remainder = altcount % 10
+
+if remainder = 0
+    endtime = time.time()
+    Second_Alt=altimeter.readline()
+    V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
+else
+    Second_Alt = Alt_Current
+    endtime=starttime
+    
+    
+
+
+
+
+    
+Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((Roh*(V_current^2))/2)*Area)/Mass))))
+ 
+    
     
 now = datetime.datetime.now()
 timestamp = now.strftime("%Y/%m/%d %H:%M")
@@ -161,14 +198,12 @@ f.write(outstring)
     
 radio.write(outstring)
     
- sleep(1/30)   
+altcount=altcount+1  
+
+
  except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nKilling Thread..."
     print "Done.\nExiting."   
-    
-    
-    
-    
 f.close()
 
   
