@@ -181,7 +181,7 @@ while True:
         endtime=starttime
     
     
-Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((Roh*(V_current^2))/2)*Area)/Mass))))
+     Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((Roh*(V_current^2))/2)*Area)/Mass))))
 ##########################################################################################################################
 
     if brakes == 1:
@@ -202,22 +202,22 @@ Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((Roh*(V_current^2))/2)
     
 #######################################################################################################################    
     
-now = datetime.datetime.now()
-timestamp = now.strftime("%Y/%m/%d %H:%M")
-#Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
-outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
-+ str(brakes)+','+str(parachute)
-f.write(outstring)
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%Y/%m/%d %H:%M")
+    #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
+    outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
+    + str(brakes)+','+str(parachute)
+    f.write(outstring)
     
-radio.write(outstring)
+    radio.write(outstring)
     
-altcount=altcount+1  
+    altcount=altcount+1  
 
 
- except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-    print "\nKilling Thread..."
-    print "Done.\nExiting."   
-    f.close()
+    except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+        print "\nKilling Thread..."
+        print "Done.\nExiting."   
+        f.close()
 
   
 
