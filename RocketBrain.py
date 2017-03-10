@@ -16,9 +16,8 @@ import datetime
 #Initilize hardware functions 
 ##############################################################################################
 #Open Log File
-    f=open('RocketLog.txt','a')
 
-
+f=open('RocketLog.txt','a')
 
 altimeter = serial.Serial(
               
@@ -44,12 +43,12 @@ radio = serial.Serial(
 gpsd = None 
 
 class GpsPoller(threading.Thread):
-  def __init__(self):
-    threading.Thread.__init__(self)
-    global gpsd #bring it in scope
-    gpsd = gps(mode=WATCH_ENABLE) #starting the stream of info
-    self.current_value = None
-    self.running = True #setting the thread running to true
+    def __init__(self):
+        threading.Thread.__init__(self)
+        global gpsd #bring it in scope
+        gpsd = gps(mode=WATCH_ENABLE) #starting the stream of info
+        self.current_value = None
+        self.running = True #setting the thread running to true
 
 # Power management registers
 power_mgmt_1 = 0x6b
@@ -112,8 +111,8 @@ while True:
 
 #################################Altitude ##################################################
 
-starttime = time.time()
-Alt_current=altimeter.readline()
+    starttime = time.time()
+    Alt_current=altimeter.readline()
 
 
 ##################################GPS ######################################################
@@ -134,66 +133,80 @@ Alt_current=altimeter.readline()
       #print 'sats        ' , gpsd.satellites
  
 
-###################################Accelerometer#################################################
+################################### Accelerometer ################################################
 
 
-print "gyro data"
-print "---------"
+    print "gyro data"
+    print "---------"
 
-gyro_xout = read_word_2c(0x43)
-gyro_yout = read_word_2c(0x45)
-gyro_zout = read_word_2c(0x47)
+    gyro_xout = read_word_2c(0x43)
+    gyro_yout = read_word_2c(0x45)
+    gyro_zout = read_word_2c(0x47)
 
-print "gyro_xout: ", gyro_xout, " scaled: ", (gyro_xout / 131)
-print "gyro_yout: ", gyro_yout, " scaled: ", (gyro_yout / 131)
-print "gyro_zout: ", gyro_zout, " scaled: ", (gyro_zout / 131)
+    print "gyro_xout: ", gyro_xout, " scaled: ", (gyro_xout / 131)
+    print "gyro_yout: ", gyro_yout, " scaled: ", (gyro_yout / 131)
+    print "gyro_zout: ", gyro_zout, " scaled: ", (gyro_zout / 131)
 
-print
-print "accelerometer data"
-print "------------------"
+    print
+    print "accelerometer data"
+    print "------------------"
 
-accel_xout = read_word_2c(0x3b)
-accel_yout = read_word_2c(0x3d)
-accel_zout = read_word_2c(0x3f)
+    accel_xout = read_word_2c(0x3b)
+    accel_yout = read_word_2c(0x3d)
+    accel_zout = read_word_2c(0x3f)
 
-accel_xout_scaled = accel_xout / 16384.0
-accel_yout_scaled = accel_yout / 16384.0
-accel_zout_scaled = accel_zout / 16384.0
+    accel_xout_scaled = accel_xout / 16384.0
+    accel_yout_scaled = accel_yout / 16384.0
+    accel_zout_scaled = accel_zout / 16384.0
 
-#Use print statement variables to create packet 
-print "accel_xout: ", accel_xout, " scaled: ", accel_xout_scaled
-print "accel_yout: ", accel_yout, " scaled: ", accel_yout_scaled
-print "accel_zout: ", accel_zout, " scaled: ", accel_zout_scaled
-print "x rotation: " , get_x_rotation(accel_xout_scaled, accel_yout_scaled, accel_zout_scaled)
-print "y rotation: " , get_y_rotation(accel_xout_scaled, accel_yout_scaled, accel_zout_scaled)
+    #Use print statement variables to create packet 
+    print "accel_xout: ", accel_xout, " scaled: ", accel_xout_scaled
+    print "accel_yout: ", accel_yout, " scaled: ", accel_yout_scaled
+    print "accel_zout: ", accel_zout, " scaled: ", accel_zout_scaled
+    print "x rotation: " , get_x_rotation(accel_xout_scaled, accel_yout_scaled, accel_zout_scaled)
+    print "y rotation: " , get_y_rotation(accel_xout_scaled, accel_yout_scaled, accel_zout_scaled)
 ###############################################################################################
 
-sleep(1/30)  
+    sleep(1/30)  
 
-remainder = altcount % 10
+    remainder = altcount % 10
 
-if remainder = 0
-    endtime = time.time()
-    Second_Alt=altimeter.readline()
-    V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
-else
-    Second_Alt = Alt_Current
-    endtime=starttime
+    if remainder = 0:
+     endtime = time.time()
+     Second_Alt=altimeter.readline()
+     V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
+    else:
+        Second_Alt = Alt_Current
+        endtime=starttime
     
-
-
-
-
     
 Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((Roh*(V_current^2))/2)*Area)/Mass))))
- 
+##########################################################################################################################
+
+    if brakes == 1:
+        brakes.engaged()
+        return
+        
+    if brakes == 0:
+        brakes.disengaged()
+        return
     
+    if parachutes == 1:
+        parachutes.out()
+        return
+    
+    if parachutes == 0:
+        parachutes.in()
+        return
+    
+#######################################################################################################################    
     
 now = datetime.datetime.now()
 timestamp = now.strftime("%Y/%m/%d %H:%M")
 #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
 outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
++ str(brakes)+','+str(parachute)
 f.write(outstring)
     
 radio.write(outstring)
@@ -204,7 +217,7 @@ altcount=altcount+1
  except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nKilling Thread..."
     print "Done.\nExiting."   
-f.close()
+    f.close()
 
   
 
