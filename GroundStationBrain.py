@@ -33,6 +33,15 @@ radio = serial.Serial(
 while True:      
 
 datain=radio.readline()
+datainNoComma = datain.split(",")
+
+if int(datainNoComma[7]) == 1:
+  doSomething.on()
+  f.write(1 + "\n")
+  
+if int(datainNoComma[7]) == 0:
+  doSomething.off()
+  f.write(0 + "\n")
 
 now = datetime.datetime.now()
 timestamp = now.strftime("%Y/%m/%d %H:%M")
