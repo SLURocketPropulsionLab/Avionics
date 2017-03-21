@@ -126,7 +126,7 @@ V_current=0
 g=32.2 #ft/s^2
 Drag= enter drag here
 Roh = [0.00217539, 0.00198698, 0.00181132,0.00164779, 0.00149581,0.00135479,0.00122417,0.00110341,0.000991984,0.000889378]
-Area=enter area here
+Area= enter area here
 Mass = enter mass here
 Second_Alt = 0
 altcount=0
@@ -191,11 +191,17 @@ while True:
 
     try:
         accel_xout = int(read_word_2c(0x3b))
-    except:
+    except Null_xout:
         accel_xout = 0
-    try
-    accel_yout = read_word_2c(0x3d)
-    accel_zout = read_word_2c(0x3f)
+    try:
+        accel_yout = int(read_word_2c(0x3d))
+    except Null_yout:
+        accel_yout = 0
+    try:
+        accel_zout = int(read_word_2c(0x3f))
+    except Null_zout:
+        accel_zout = 0
+        
 
     accel_xout_scaled = accel_xout / 16384.0
     accel_yout_scaled = accel_yout / 16384.0
@@ -215,7 +221,10 @@ while True:
 
     if remainder = 0:
         endtime = time.time()
-        Second_Alt=altimeter.readline()
+        try:
+            Second_Alt=int(altimeter.readline())
+        except Null_secondalt:
+            Second_Alt = 0
         V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
     else:
