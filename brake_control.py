@@ -16,7 +16,7 @@ stepcount = 0
 
 if condition == 1
   GPIO.output(35, GPIO.HIGH)
-  while stepcount < 200  && (stepcount + totalsteps) <= 10000
+  while stepcount < 200  and (stepcount + totalsteps) <= 10000
   
     GPIO.output(12, GPIO.HIGH)
     time.sleep(.00005)
@@ -27,7 +27,7 @@ if condition == 1
     
   else
      GPIO.output(35, GPIO.LOW)
-     while stepcount < 200  && (totalsteps-stepcount) >= 0 
+     while stepcount < 200  and (totalsteps-stepcount) >= 0 
   
       GPIO.output(12, GPIO.HIGH)
       time.sleep(.00005)
