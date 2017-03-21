@@ -22,6 +22,8 @@ FORMAT = '%Y%m%d%H%M%S'
 path = 'Rocketlog.txt'
 new_path = '%s_%s' % (datetime.now().strftime(FORMAT), path)
 f=open(new_path, 'a')
+brake=open('brake_variable.txt', 'a')
+
 
 
 altimeter = serial.Serial(
@@ -223,15 +225,17 @@ while True:
         endtime=starttime
     
 Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((density(Second_Alt)*(V_current^2))/2)*Area)/Mass))))
+ 
+if Alt_proj > 30000
+  brake.write(1)
+  brakes=1
+else  
+  brake.write(0)
+  brakes=0
+   
 ##########################################################################################################################
 
-    if brakes == 1:
-        brakes.engaged()
-        return
-        
-    if brakes == 0:
-        brakes.disengaged()
-        return
+   
     
     if parachutes == 1:
         parachutes.out()
@@ -243,22 +247,13 @@ Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((density(Second_Alt)*(
     
 #######################################################################################################################    
     
-    datain = f.readline()
-    datainNoComma = datain.split(",")
-    
-    if int(datainNoComma[0]) == 1:
-      doSomething.on()
-      f.write(1 + "\n")
-    
-    if int(datainNoComma[0]) == 0:
-      doSomething.on()
-      f.write(0 + "\n")
+  
     
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y/%m/%d %H:%M")
     #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
     outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
-    + str(brakes)+","+str(parachute)+","+str(doSomething)
+    + str(brakes)+","+str(parachute)
     f.write(outstring)
     
     radio.write(outstring)
