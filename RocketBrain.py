@@ -253,22 +253,14 @@ if Second_Alt >= 30000
     
 #######################################################################################################################    
     
-    datain = f.readline()
-    datainNoComma = datain.split(",")
     
-    if int(datainNoComma[0]) == 1:
-      doSomething.on()
-      f.write(1 + "\n")
-    
-    if int(datainNoComma[0]) == 0:
-      doSomething.on()
-      f.write(0 + "\n")
+   
     
     now = datetime.datetime.now()
-    timestamp = now.strftime("%Y/%m/%d %H:%M")
+    timestamp = now.strftime("%H:%M")
     #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
     outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
-    + str(brake)+","+str(parachute)+","+str(doSomething)
+    + str(brake)+","+str(parachute)
     f.write(outstring)
     
     radio.write(outstring)
