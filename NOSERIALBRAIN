@@ -33,15 +33,6 @@ altimeter = serial.Serial(
                bytesize=serial.EIGHTBITS,
                timeout=1/20
            )
-radio = serial.Serial(
-              
-               port='/dev/ttyAMA0',
-               baudrate = 9600,
-               parity=serial.PARITY_NONE,
-               stopbits=serial.STOPBITS_ONE,
-               bytesize=serial.EIGHTBITS,
-               timeout=1/20
-           )
 
 
 #seting the global variable
@@ -86,28 +77,7 @@ def get_x_rotation(x,y,z):
     radians = math.atan2(y, dist(x,z))
     return math.degrees(radians)
   
-  def density(alt):
-    if alt >= 27000:
-        roh = Roh[10]
-    elif alt >= 24000:
-        roh = Roh[9]
-    elif alt >= 21000:
-        roh = Roh[8]
-    elif alt >= 18000:
-        roh = Roh[7]
-    elif alt >= 15000:
-        roh = Roh[6]
-    elif alt >= 12000:
-        roh = Roh[5]
-    elif alt >= 9000:
-        roh = Roh[4]
-    elif alt >= 6000:
-        roh = Roh[3]
-    elif alt >= 3000:
-        roh = Roh[2]
-    else:
-        roh = Roh[1]
-    return roh
+  
 
 bus = smbus.SMBus(0) # or bus = smbus.SMBus(1) for Revision 2 boards
 address = 0x68       # This is the address value read via the i2cdetect command
@@ -126,8 +96,8 @@ V_current=0
 g=32.2 #ft/s^2
 Drag= enter drag here
 Roh = [0.00217539, 0.00198698, 0.00181132,0.00164779, 0.00149581,0.00135479,0.00122417,0.00110341,0.000991984,0.000889378]
-Area= enter area here
-Mass = enter mass here
+Area= 5
+Mass = 5
 Second_Alt = 0
 altcount=0
 
@@ -251,15 +221,7 @@ if Second_Alt >= 30000
 
   
 ########################################################################################################################
-    
-    if parachutes == 1:
-        parachutes.out()
-        return
-    
-    if parachutes == 0:
-        parachutes.in()
-        return
-    
+   
 #######################################################################################################################    
     
     
@@ -272,7 +234,7 @@ if Second_Alt >= 30000
     + str(brake)+","+str(parachute)
     f.write(outstring)
     
-    radio.write(outstring)
+
     
     altcount=altcount+1  
 
