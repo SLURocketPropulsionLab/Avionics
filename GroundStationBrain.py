@@ -44,7 +44,7 @@ if int(datainNoComma[7]) == 0:
   f.write(0 + "\n")
 
 now = datetime.datetime.now()
-timestamp = now.strftime("%Y/%m/%d %H:%M")
+timestamp = now.strftime("%H:%M")
 #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
 outstring = str(timestamp)+","+str(datain)+"\n"
 f.write(outstring)
