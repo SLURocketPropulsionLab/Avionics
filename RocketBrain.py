@@ -80,6 +80,29 @@ def get_y_rotation(x,y,z):
 def get_x_rotation(x,y,z):
     radians = math.atan2(y, dist(x,z))
     return math.degrees(radians)
+  
+  def density(alt):
+    if alt >= 27000:
+        roh = Roh[10]
+    elif alt >= 24000:
+        roh = Roh[9]
+    elif alt >= 21000:
+        roh = Roh[8]
+    elif alt >= 18000:
+        roh = Roh[7]
+    elif alt >= 15000:
+        roh = Roh[6]
+    elif alt >= 12000:
+        roh = Roh[5]
+    elif alt >= 9000:
+        roh = Roh[4]
+    elif alt >= 6000:
+        roh = Roh[3]
+    elif alt >= 3000:
+        roh = Roh[2]
+    else:
+        roh = Roh[1]
+    return roh
 
 bus = smbus.SMBus(0) # or bus = smbus.SMBus(1) for Revision 2 boards
 address = 0x68       # This is the address value read via the i2cdetect command
@@ -97,7 +120,7 @@ Alt_current=0
 V_current=0
 g=32.2 #ft/s^2
 Drag= enter drag here
-Roh = enter density array here
+Roh = [0.00217539, 0.00198698, 0.00181132,0.00164779, 0.00149581,0.00135479,0.00122417,0.00110341,0.000991984,0.000889378]
 Area=enter area here
 Mass = enter mass here
 Second_Alt = 0
@@ -172,16 +195,15 @@ while True:
     remainder = altcount % 10
 
     if remainder = 0:
-     endtime = time.time()
-     Second_Alt=altimeter.readline()
-     V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
+        endtime = time.time()
+        Second_Alt=altimeter.readline()
+        V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
     else:
         Second_Alt = Alt_Current
         endtime=starttime
     
-    
-     Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((Roh*(V_current^2))/2)*Area)/Mass))))
+Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((density(Second_Alt)*(V_current^2))/2)*Area)/Mass))))
 ##########################################################################################################################
 
     if brakes == 1:
