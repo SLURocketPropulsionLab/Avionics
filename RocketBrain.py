@@ -22,8 +22,6 @@ FORMAT = '%Y%m%d%H%M%S'
 path = 'Rocketlog.txt'
 new_path = '%s_%s' % (datetime.now().strftime(FORMAT), path)
 f=open(new_path, 'a')
-brake=open('brake_variable.txt', 'a')
-
 
 
 altimeter = serial.Serial(
@@ -142,7 +140,7 @@ while True:
 #################################Altitude ##################################################
     starttime = time.time()
     try:
-        Alt_current = altimeter.readline()
+        Alt_current = int(altimeter.readline())
     except Nullreadline:
         Alt_current = 0
 
@@ -171,15 +169,15 @@ while True:
     print "gyro data"
     print "---------"
     try:
-        gyro_xout = read_word_2c(0x43)
+        gyro_xout = int(read_word_2c(0x43))
     except Null_xout:
         gyro_xout = 0
     try:
-        gyro_yout = read_word_2c(0x45)
+        gyro_yout = int(read_word_2c(0x45))
     except Null_yout:
         gyro_yout = 0
     try:
-        gyro_zout = read_word_2c(0x47)
+        gyro_zout = int(read_word_2c(0x47))
     except Null zout:
         gyro_zout = 0
 
@@ -192,7 +190,7 @@ while True:
     print "------------------"
 
     try:
-        accel_xout = read_word_2c(0x3b)
+        accel_xout = int(read_word_2c(0x3b))
     except:
         accel_xout = 0
     try
@@ -225,17 +223,15 @@ while True:
         endtime=starttime
     
 Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((density(Second_Alt)*(V_current^2))/2)*Area)/Mass))))
- 
-if Alt_proj > 30000
-  brake.write(1)
-  brakes=1
-else  
-  brake.write(0)
-  brakes=0
-   
 ##########################################################################################################################
 
-   
+    if brakes == 1:
+        brakes.engaged()
+        return
+        
+    if brakes == 0:
+        brakes.disengaged()
+        return
     
     if parachutes == 1:
         parachutes.out()
@@ -247,13 +243,22 @@ else
     
 #######################################################################################################################    
     
-  
+    datain = f.readline()
+    datainNoComma = datain.split(",")
+    
+    if int(datainNoComma[0]) == 1:
+      doSomething.on()
+      f.write(1 + "\n")
+    
+    if int(datainNoComma[0]) == 0:
+      doSomething.on()
+      f.write(0 + "\n")
     
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y/%m/%d %H:%M")
     #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
     outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
-    + str(brakes)+","+str(parachute)
+    + str(brakes)+","+str(parachute)+","+str(doSomething)
     f.write(outstring)
     
     radio.write(outstring)
