@@ -17,7 +17,12 @@ import datetime
 ##############################################################################################
 #Open Log File
 
-f=open('RocketLog.txt','a')
+# define a timestamp format you like
+FORMAT = '%Y%m%d%H%M%S'
+path = 'Rocketlog.txt'
+new_path = '%s_%s' % (datetime.now().strftime(FORMAT), path)
+f=open(new_path, 'a')
+
 
 altimeter = serial.Serial(
               
