@@ -138,9 +138,11 @@ altcount=0
 while True:
 
 #################################Altitude ##################################################
-
     starttime = time.time()
-    Alt_current=altimeter.readline()
+    try:
+        Alt_current = altimeter.readline()
+    except Nullreadline:
+        Alt_current = 0
 
 
 ##################################GPS ######################################################
@@ -166,10 +168,18 @@ while True:
 
     print "gyro data"
     print "---------"
-
-    gyro_xout = read_word_2c(0x43)
-    gyro_yout = read_word_2c(0x45)
-    gyro_zout = read_word_2c(0x47)
+    try:
+        gyro_xout = read_word_2c(0x43)
+    except Null_xout:
+        gyro_xout = 0
+    try:
+        gyro_yout = read_word_2c(0x45)
+    except Null_yout:
+        gyro_yout = 0
+    try:
+        gyro_zout = read_word_2c(0x47)
+    except Null zout:
+        gyro_zout = 0
 
     print "gyro_xout: ", gyro_xout, " scaled: ", (gyro_xout / 131)
     print "gyro_yout: ", gyro_yout, " scaled: ", (gyro_yout / 131)
@@ -179,7 +189,11 @@ while True:
     print "accelerometer data"
     print "------------------"
 
-    accel_xout = read_word_2c(0x3b)
+    try:
+        accel_xout = read_word_2c(0x3b)
+    except:
+        accel_xout = 0
+    try
     accel_yout = read_word_2c(0x3d)
     accel_zout = read_word_2c(0x3f)
 
