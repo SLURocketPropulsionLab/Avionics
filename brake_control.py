@@ -23,7 +23,7 @@ if condition == 1
     GPIO.output(12, GPIO.LOW)
     stepcount +=1
     totalsteps +=1
-    return
+    
     
   else
      GPIO.output(35, GPIO.LOW)
@@ -33,10 +33,10 @@ if condition == 1
       time.sleep(.00005)
       GPIO.output(12, GPIO.LOW)
       stepcount +=1
-      return
+      
 
     
-return   
+   
     
   
 
