@@ -18,9 +18,10 @@ import datetime
 #Open Log File
 
 # define a timestamp format you like
-FORMAT = '%Y%m%d%H%M%S'
+now=datetime.dateime()
+FORMAT = '%H%M%S'
 path = 'Rocketlog.txt'
-new_path = '%s_%s' % (datetime.now().strftime(FORMAT), path)
+new_path = '%s_%s' % (now.strftime(FORMAT), path)
 f=open(new_path, 'a')
 brakes=open('brakes_control.txt','a')
 
@@ -79,7 +80,7 @@ def get_x_rotation(x,y,z):
   
   
 
-bus = smbus.SMBus(0) # or bus = smbus.SMBus(1) for Revision 2 boards
+bus = smbus.SMBus(1) # or bus = smbus.SMBus(1) for Revision 2 boards
 address = 0x68       # This is the address value read via the i2cdetect command
 
 # Now wake the 6050 up as it starts in sleep mode
@@ -94,7 +95,7 @@ Alt_proj=0
 Alt_current=0
 V_current=0
 g=32.2 #ft/s^2
-Drag= enter drag here
+Drag= .42
 Roh = [0.00217539, 0.00198698, 0.00181132,0.00164779, 0.00149581,0.00135479,0.00122417,0.00110341,0.000991984,0.000889378]
 Area= 5
 Mass = 5
@@ -209,12 +210,12 @@ if Alt_proj >= 30000
 else
   brakes.write(0)
   brake=0
-  return
+  
 
 if Second_Alt >= 30000
   brakes.write(0)
   brake=0
-  return
+  
   
   
  
