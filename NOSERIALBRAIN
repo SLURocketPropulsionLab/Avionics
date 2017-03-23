@@ -16,6 +16,10 @@ import datetime
 #Initilize hardware functions 
 ##############################################################################################
 #Open Log File
+#SETTINGS
+sleeptime=1/30
+alt_divider=10  #every x loops, take a new alt measurment 
+
 
 # define a timestamp format you like
 now=datetime.dateime()
@@ -78,6 +82,29 @@ def get_x_rotation(x,y,z):
     radians = math.atan2(y, dist(x,z))
     return math.degrees(radians)
   
+  
+  def density(alt):
+    if alt >= 27000:
+        roh = Roh[10]
+    elif alt >= 24000:
+        roh = Roh[9]
+    elif alt >= 21000:
+        roh = Roh[8]
+    elif alt >= 18000:
+        roh = Roh[7]
+    elif alt >= 15000:
+        roh = Roh[6]
+    elif alt >= 12000:
+        roh = Roh[5]
+    elif alt >= 9000:
+        roh = Roh[4]
+    elif alt >= 6000:
+        roh = Roh[3]
+    elif alt >= 3000:
+        roh = Roh[2]
+    else:
+        roh = Roh[1]
+    return roh
   
 
 bus = smbus.SMBus(1) # or bus = smbus.SMBus(1) for Revision 2 boards
@@ -186,20 +213,21 @@ while True:
     print "y rotation: " , get_y_rotation(accel_xout_scaled, accel_yout_scaled, accel_zout_scaled)
 ###############################################################################################
 
-    sleep(1/30)  
+    sleep(sleeptime)  
 
-    remainder = altcount % 10
+    remainder = altcount % alt_divider
 
     if remainder = 0:
         endtime = time.time()
         try:
             Second_Alt=int(altimeter.readline())
         except Null_secondalt:
-            Second_Alt = 0
+            Second_Alt = Alt_current
+            
         V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
     else:
-        Second_Alt = Alt_Current
+        Second_Alt = Alt_current
         endtime=starttime
     
 Alt_proj = (Second_Alt + ((V_current^2) / ( 2 * ((g+Drag*((density(Second_Alt)*(V_current^2))/2)*Area)/Mass))))
@@ -215,7 +243,9 @@ else
 if Second_Alt >= 30000
   brakes.write(0)
   brake=0
-  
+if Alt_current >= 30000
+  brakes.write(0)
+  brake=0  
   
   
  
@@ -230,17 +260,14 @@ if Second_Alt >= 30000
     
     now = datetime.datetime.now()
     timestamp = now.strftime("%H:%M")
-    #Timestamp,Strattoaltitude,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Xrot,Yrot,Zrot
-    outstring = str(timestamp)+","+str(CurrentAltitude)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+"\n"
-    + str(brake)+","+str(parachute)
-    f.write(outstring)
+    #Timestamp,Strattoaltitude,Current Velocity,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Projected Alt
+    writestring = str(timestamp)+","+str(Second_Alt)+","+str(V_current)+","+str(gpsd.fix.altitude)+","+str(gpsd.fix.latitude)+","+str(gpsd.fix.longitude)+","
+    +str(brake)+","+str(accel_xout_scaled)+","+str(accel_yout_scaled)+","+str(accel_zout_scaled)+","+str(Alt_proj)+","
+    f.write(writestring)
     
 
     
     altcount=altcount+1  
 
 
-    except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-        print "\nKilling Thread..."
-        print "Done.\nExiting."   
-        f.close()
+   
