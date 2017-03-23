@@ -18,9 +18,9 @@ import datetime
 #Open Log File
 
 # define a timestamp format you like
-FORMAT = '%Y%m%d%H%M%S'
+FORMAT = '%d%H%M%S'
 path = 'Rocketlog.txt'
-new_path = '%s_%s' % (datetime.now().strftime(FORMAT), path)
+new_path = '%s_%s' % (datetime.datetime.now().strftime(FORMAT), path)
 f=open(new_path, 'a')
 brakes=open('brakes_control.txt','a')
 
@@ -252,13 +252,7 @@ if Second_Alt >= 30000
   
 ########################################################################################################################
     
-    if parachutes == 1:
-        parachutes.out()
-        return
-    
-    if parachutes == 0:
-        parachutes.in()
-        return
+   
     
 #######################################################################################################################    
     
