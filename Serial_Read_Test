@@ -1,0 +1,89 @@
+#!/usr/bin/python
+
+import smbus
+import math
+import os
+from gps import *
+from time import *
+import threading
+import serial
+import smbus
+import time
+import datetime
+
+
+sleeptime=1/30
+alt_divider=10  #every x loops, take a new alt measurment 
+
+
+# define a timestamp format you like
+now=datetime.dateime()
+FORMAT = '%H%M%S'
+path = 'Rocketlog.txt'
+new_path = '%s_%s' % (now.strftime(FORMAT), path)
+f=open(new_path, 'a')
+brakes=open('brakes_control.txt','a')
+
+altimeter = serial.Serial(
+              
+               port='/dev/ttyAMA0',
+               baudrate = 9600,
+               parity=serial.PARITY_NONE,
+               stopbits=serial.STOPBITS_ONE,
+               bytesize=serial.EIGHTBITS,
+               timeout=1/20
+           )
+
+
+  
+  
+
+
+Alt_proj=0
+Alt_current=0
+
+Second_Alt = 0
+altcount=0
+
+
+while True:
+
+
+    starttime = time.time()
+    try:
+        Alt_current = int(altimeter.readline())
+    except Nullreadline:
+        Alt_current = 0
+
+
+    sleep(sleeptime)  
+
+    remainder = altcount % alt_divider
+
+    if remainder = 0:
+        endtime = time.time()
+        try:
+            Second_Alt=int(altimeter.readline())
+        except Null_secondalt:
+            Second_Alt = Alt_current
+            
+        V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
+    
+    else:
+        Second_Alt = Alt_current
+        endtime=starttime
+    
+ 
+ 
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%H:%M")
+    #Timestamp,Strattoaltitude,Current Velocity,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Projected Alt
+    writestring = str(timestamp)+","+str(Second_Alt)+","+str(V_current)+"\n"
+    f.write(writestring)
+    
+
+    
+    altcount=altcount+1  
+
+
+   
