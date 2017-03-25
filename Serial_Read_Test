@@ -10,18 +10,18 @@ import serial
 import smbus
 import time
 import datetime
+from datetime import date
 
-
-sleeptime=1/30
+sleeptime=1
 alt_divider=10  #every x loops, take a new alt measurment 
 
 
 # define a timestamp format you like
-now=datetime.dateime()
-FORMAT = '%H%M%S'
-path = 'Rocketlog.txt'
-new_path = '%s_%s' % (now.strftime(FORMAT), path)
-f=open(new_path, 'a')
+#now=date.today()
+#FORMAT = '%Y%D%H%M%S'
+#path = 'Rocketlog.txt'
+#new_path = '%s_%s' % (now.strftime(FORMAT), path)
+f=open('rocketlog.txt', 'a')
 brakes=open('brakes_control.txt','a')
 
 altimeter = serial.Serial(
@@ -31,7 +31,7 @@ altimeter = serial.Serial(
                parity=serial.PARITY_NONE,
                stopbits=serial.STOPBITS_ONE,
                bytesize=serial.EIGHTBITS,
-               timeout=1/20
+               timeout=1
            )
 
 
@@ -50,23 +50,18 @@ while True:
 
 
     starttime = time.time()
-    try:
-        Alt_current = int(altimeter.readline())
-    except Nullreadline:
-        Alt_current = 0
+    Alt_current =int(altimeter.readline())
+    
 
 
     sleep(sleeptime)  
 
     remainder = altcount % alt_divider
 
-    if remainder = 0:
+    if remainder == 0:
         endtime = time.time()
-        try:
-            Second_Alt=int(altimeter.readline())
-        except Null_secondalt:
-            Second_Alt = Alt_current
-            
+        Second_Alt=int(altimeter.readline())
+                    
         V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
     else:
@@ -76,7 +71,7 @@ while True:
  
  
     now = datetime.datetime.now()
-    timestamp = now.strftime("%H:%M")
+    timestamp = now.strftime("%H:%M:%S")
     #Timestamp,Strattoaltitude,Current Velocity,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Projected Alt
     writestring = str(timestamp)+","+str(Second_Alt)+","+str(V_current)+"\n"
     f.write(writestring)
