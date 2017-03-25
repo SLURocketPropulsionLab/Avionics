@@ -12,18 +12,18 @@ import time
 import datetime
 from datetime import date
 
+
+#Settings 
 sleeptime=1
 alt_divider=10  #every x loops, take a new alt measurment 
 
 
-# define a timestamp format you like
-#now=date.today()
-#FORMAT = '%Y%D%H%M%S'
-#path = 'Rocketlog.txt'
-#new_path = '%s_%s' % (now.strftime(FORMAT), path)
+#Create text files
 f=open('rocketlog.txt', 'a')
 brakes=open('brakes_control.txt','a')
 
+
+#Open serial port 
 altimeter = serial.Serial(
               
                port='/dev/ttyAMA0',
@@ -31,54 +31,43 @@ altimeter = serial.Serial(
                parity=serial.PARITY_NONE,
                stopbits=serial.STOPBITS_ONE,
                bytesize=serial.EIGHTBITS,
-               timeout=1
+               timeout=10
            )
 
 
-  
-  
-
-
+#Define Initial Variables 
 Alt_proj=0
 Alt_current=0
-
 Second_Alt = 0
-altcount=0
-
-
+count=0
 while True:
-
-
+  
     starttime = time.time()
     Alt_current =int(altimeter.readline())
+    V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
-
-
-    sleep(sleeptime)  
-
-    remainder = altcount % alt_divider
-
-    if remainder == 0:
-        endtime = time.time()
-        Second_Alt=int(altimeter.readline())
-                    
-        V_current = (abs(Alt_current - Second_Alt))/(abs(starttime-endtime))
     
-    else:
-        Second_Alt = Alt_current
-        endtime=starttime
     
- 
- 
+    
+    
+    
+    
+    
+    
+    
     now = datetime.datetime.now()
     timestamp = now.strftime("%H:%M:%S")
-    #Timestamp,Strattoaltitude,Current Velocity,GPSAlt,Latitude,Longitude,Xaccel,Yaccel,Zaccel,Projected Alt
     writestring = str(timestamp)+","+str(Second_Alt)+","+str(V_current)+"\n"
     f.write(writestring)
     
-
     
-    altcount=altcount+1  
+    sleep(sleeptime) 
+    
+    
+    endtime = time.time()
+    Second_Alt=int(altimeter.readline())
+    
+   
 
 
    
